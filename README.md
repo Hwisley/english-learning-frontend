@@ -1,1 +1,1 @@
-# essay_memorization
+# English Sentences Memorizer
