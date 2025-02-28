@@ -9,7 +9,8 @@ const StudyPage: React.FC = () => {
   const [idx, setIdx] = useState<number>(0); // 정답을 숫자로 저장
 
   useEffect(() => {
-    fetch("/data/data.json") // ⬅️ public 폴더 기준으로 경로 설정!
+    // fetch("/data/data.json") // ⬅️ public 폴더 기준으로 경로 설정!
+    fetch("/data/test_data.json") // ⬅️ public 폴더 기준으로 경로 설정!
       .then(response => response.json())
       .then(data => {
         setEngScript(data.eng_script);
@@ -33,6 +34,7 @@ const StudyPage: React.FC = () => {
     if (e.key === "Enter") {
       if (idx == engScript.length - 1) {
         setResult("끝났어! Finished!");
+        setKorScript([]); // TODO data reset
         return;
       }
       if (inputText === correctAnswer) {
@@ -60,12 +62,13 @@ const StudyPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        {/* Embedded text */}
-        <p className="text-xl font-semibold text-center mb-4">
-          {korScript[idx]} {/* Set embedded text to kor_script[0] */}
+      <div className="bg-gray-100 p-6 rounded-lg shadow-lg mt-6">
+        <p className="max-w-md mx-auto text-center text-gray-700">
+        {korScript[idx]} {/* Set embedded text to kor_script[0] */}
         </p>
+      </div>
 
+      <div className="bg-white p-6 rounded-lg shadow-lg">
         {/* Input Text Box */}
         <input
           type="text"

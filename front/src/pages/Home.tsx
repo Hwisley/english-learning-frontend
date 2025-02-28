@@ -4,11 +4,9 @@ import TestPage from "../components/Test";
 
 const Home: React.FC = () => {
   return (
-    // <div className="flex justify-center items-center min-h-screen bg-gray-50 gap-y-10">
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 gap-y-10">
-
+    <div className="flex justify-center items-center min-h-screen bg-gray-50">
       <StudyPage />
-      {/* <TestPage /> */}
+      <TestPage />
     </div>
   );
 };
