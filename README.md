@@ -13,6 +13,8 @@ I have been memorizing content from this site ([CNN YBM](https://cnn.ybmnet.co.k
 - Allow users to create and manage their own content.  
 - Integrate content from **Live Academy**, my favorite YouTuber, to enhance the learning experience.  
 
-## Environment
+## Requirement
 
-python 3.10
+- please check package.json
+
+
