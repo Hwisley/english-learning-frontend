@@ -1,4 +1,0 @@
-# requests
-# beautifulsoup4
-selenium
-webdriver_manager         # conda install conda-forge::webdriver-manager
