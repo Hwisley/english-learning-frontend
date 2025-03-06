@@ -4,7 +4,7 @@ This project aims to create a webpage for learning English.
 
 I have been memorizing content from this site ([CNN YBM](https://cnn.ybmnet.co.kr/main)) to improve my English, but I needed a more convenient tool to assist with the process. That’s why I started developing this project.  
 
-## Installation
+## How to run
 
 ```
 $ npm install
