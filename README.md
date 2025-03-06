@@ -6,6 +6,11 @@ I have been memorizing content from this site ([CNN YBM](https://cnn.ybmnet.co.k
 
 ## Installation
 
+```
+$ npm install
+$ npm run dev
+```
+
 ### Project Stack
 - React
 - Vite
