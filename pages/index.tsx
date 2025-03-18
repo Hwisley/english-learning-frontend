@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
+import data from '../public/data/data.json';
 
 interface Article {
   englishSentences: string[];
@@ -8,23 +9,8 @@ interface Article {
 }
 
 export default function EnglishPractice() {
-  // 샘플 기사 데이터
-  const sampleArticle: Article = {
-    englishSentences: [
-      "The United Nations called for immediate action on climate change.",
-      "Global temperatures have risen at an alarming rate in the past decade.",
-      "Many countries have pledged to reduce carbon emissions by 2030.",
-      "Experts warn that we may soon reach a tipping point.",
-      "Renewable energy sources are becoming increasingly affordable."
-    ],
-    koreanSentences: [
-      "유엔은 기후 변화에 대한 즉각적인 조치를 촉구했다.",
-      "지난 10년간 전 세계 기온이 놀라운 속도로 상승했다.",
-      "많은 국가들이 2030년까지 탄소 배출량을 줄이기로 약속했다.",
-      "전문가들은 우리가 곧 티핑 포인트에 도달할 수 있다고 경고한다.",
-      "재생 에너지 원이 점점 더 저렴해지고 있다."
-    ]
-  };
+  // 데이터 파일에서 기사 데이터 가져오기
+  const sampleArticle: Article = data;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
@@ -129,10 +115,12 @@ export default function EnglishPractice() {
     if (!currentInput.trim()) return; // 입력이 비어있으면 무시
     
     const correctAnswer = sampleArticle.englishSentences[currentIndex];
-    const normalizedInput = currentInput.toLowerCase().trim();
-    const normalizedAnswer = correctAnswer.toLowerCase().trim();
+    // 특수문자 제거
+    const normalizeText = (text: string) => text.toLowerCase().replace(/[^a-z0-9\s]/gi, '').trim();
+    const normalizedInput = normalizeText(currentInput);
+    const normalizedAnswer = normalizeText(correctAnswer);
     
-    // 기본적인 내용이 일치하는지 확인 (대소문자 무시)
+    // 기본적인 내용이 일치하는지 확인 (대소문자 및 특수문자 무시)
     if (normalizedInput === normalizedAnswer) {
       // 내용은 같지만 형식(대소문자, 특수문자)이 다른 경우에만 교정
       if (currentInput !== correctAnswer) {
@@ -154,8 +142,8 @@ export default function EnglishPractice() {
       let newInput = [...inputWords];
       
       for (let i = 0; i < inputWords.length && i < answerWords.length; i++) {
-        // 대소문자만 다른 경우
-        if (inputWords[i].toLowerCase() === answerWords[i].toLowerCase() && 
+        // 대소문자 및 특수문자만 다른 경우
+        if (normalizeText(inputWords[i]) === normalizeText(answerWords[i]) && 
             inputWords[i] !== answerWords[i]) {
           newInput[i] = answerWords[i];
           corrected = true;
@@ -273,8 +261,8 @@ export default function EnglishPractice() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-gray-100 min-h-screen font-serif" style={{ backgroundImage: 'url("https://claude.ai/new")', backgroundSize: 'cover' }}>
-      <h1 className="text-3xl font-bold mb-6 text-center border-b-2 border-gray-800 pb-2 font-serif">CNN 기사로 영어 공부하기</h1>
+    <div className="max-w-4xl mx-auto p-4 bg-gray-100 min-h-screen" style={{ fontFamily: 'Times New Roman', backgroundImage: 'url("https://claude.ai/new")', backgroundSize: 'cover' }}>
+      <h1 className="text-3xl font-bold mb-6 text-center border-b-2 border-gray-800 pb-2">CNN 기사로 영어 공부하기</h1>
       
       {/* 오디오 요소들 (화면에 보이지 않음) */}
       <audio ref={typingSoundRef} src="https://www.fesliyanstudios.com/play-mp3/6" preload="auto"></audio>
@@ -289,11 +277,11 @@ export default function EnglishPractice() {
         ></div>
       </div>
       
-      {/* 완료된 영어 문장 섹션 - 뉴스페이퍼 스타일 */}
+      {/* 완료된 영어 문장 섹션 */}
       <div className="mb-6 rounded-lg border border-gray-800 bg-white shadow-md overflow-hidden">
-        <h2 className="text-xl font-bold bg-gray-800 text-white py-2 px-4 font-serif">DAILY NEWS</h2>
-        <div className="p-6 font-serif space-y-2 bg-gray-50">
-          {completedSentences.map((sentence, idx) => (
+        <h2 className="text-xl font-bold bg-gray-800 text-white py-2 px-4">{completedSentences.length > 0 ? completedSentences[0] : ' '}</h2>
+        <div className="p-6 space-y-2 bg-gray-50">
+          {completedSentences.slice(1).map((sentence, idx) => (
             <p key={idx} className="mb-2 text-gray-900 leading-relaxed">{sentence}</p>
           ))}
           {isCorrect && (
@@ -311,16 +299,16 @@ export default function EnglishPractice() {
       {/* 현재 번역할 한국어 문장 및 입력 섹션 통합 */}
       {currentIndex < sampleArticle.englishSentences.length ? (
         <div className={`mb-6 p-4 rounded-lg transition-colors duration-300 ${isCorrect ? 'bg-green-50' : 'bg-amber-50'} border border-gray-400 shadow-md`}>
-          <h2 className="text-lg font-bold mb-2 font-serif border-b border-gray-400 pb-1">{sampleArticle.koreanSentences[currentIndex]}</h2>
+          <h2 className="text-lg font-bold mb-2 border-b border-gray-400 pb-1">{sampleArticle.koreanSentences[currentIndex]}</h2>
           <form onSubmit={handleSubmit} className="mt-4">
-            <div className="relative">
+            <div className="relative mt-4">
               <input
                 ref={inputRef}
                 type="text"
                 value={userInput}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
-                className={`w-full p-3 border ${isAutoCorrecting ? 'border-blue-500 bg-blue-50' : inputFeedback === 'correct' ? 'border-green-500 bg-green-50' : inputFeedback === 'wrong' ? 'border-red-500 bg-red-50' : 'border-gray-400'} rounded-lg font-serif text-lg bg-white focus:outline-none focus:ring-1 transition-all`}
+                className={`w-full p-3 border ${isAutoCorrecting ? 'border-blue-500 bg-blue-50' : inputFeedback === 'correct' ? 'border-green-500 bg-green-50' : inputFeedback === 'wrong' ? 'border-red-500 bg-red-50' : 'border-gray-400'} rounded-lg text-lg bg-white focus:outline-none focus:ring-1 transition-all`}
                 placeholder="영어로 번역하세요..."
                 disabled={isTyping}
               />
@@ -330,14 +318,14 @@ export default function EnglishPractice() {
         </div>
       ) : (
         <div className="p-6 bg-green-50 rounded-lg border border-green-500 shadow-md mb-6">
-          <p className="text-xl font-bold text-center font-serif">모든 문장을 완료했습니다! 👏</p>
+          <p className="text-xl font-bold text-center">모든 문장을 완료했습니다! 👏</p>
         </div>
       )}
       
       {/* 남은 한국어 번역 섹션 */}
       <div className="mb-6 rounded-lg border border-gray-400 bg-white shadow-md overflow-hidden">
-        <h2 className="text-lg font-bold bg-gray-200 py-2 px-4 border-b border-gray-400 font-serif">남은 한국어 번역</h2>
-        <div className="p-4 font-serif space-y-2">
+        <h2 className="text-lg font-bold bg-gray-200 py-2 px-4 border-b border-gray-400">남은 한국어 번역</h2>
+        <div className="p-4 space-y-2">
           {remainingSentences.slice(1).map((sentence, idx) => (
             <p key={idx} className="mb-1 pl-4 border-l border-gray-300 text-gray-700">{sentence}</p>
           ))}
